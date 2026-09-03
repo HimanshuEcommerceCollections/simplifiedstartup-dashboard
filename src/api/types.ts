@@ -47,3 +47,35 @@ export type StatsDto = {
 };
 
 export type Paged<T> = { items: T[]; total: number; page: number; pageSize: number };
+
+export const APPLICATION_STATUSES = ["new", "reviewed", "shortlisted", "hired", "rejected"] as const;
+export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
+
+export type CareerRoleDto = {
+  id: string;
+  title: string;
+  type: string;
+  location: string | null;
+  description: string;
+  published: boolean;
+  sortOrder: number;
+  applicationCount?: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type JobApplicationDto = {
+  id: string;
+  roleId: string | null;
+  roleTitle: string | null;
+  name: string;
+  email: string;
+  phone: string | null;
+  portfolioUrl: string | null;
+  hasCv: boolean;
+  message: string | null;
+  status: ApplicationStatus;
+  createdAt: string;
+};
+
+export type PublishStatusDto = { hookConfigured: boolean; lastPublishedAt: string | null; lastPublishedBy: string | null };
