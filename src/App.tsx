@@ -47,7 +47,7 @@ export default function App() {
         <Route
           path="/content"
           element={
-            <RequireRole roles={["ADMIN", "EDITOR", "VIEWER"]}>
+            <RequireRole roles={["ADMIN", "EDITOR", "CONTENT_WRITER", "VIEWER"]}>
               <Content />
             </RequireRole>
           }

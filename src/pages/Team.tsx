@@ -18,6 +18,7 @@ import { useToast } from "../ui/Toasts";
 const ROLE_HELP: Record<Role, string> = {
   ADMIN: "Everything, including team management",
   EDITOR: "Leads, subscribers, and website content",
+  CONTENT_WRITER: "Blog, FAQs, and glossary only",
   RECRUITER: "Career postings and job applications",
   VIEWER: "Read-only access",
 };

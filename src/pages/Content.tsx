@@ -19,6 +19,7 @@ import {
 } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import ConfirmModal from "../ui/ConfirmModal";
+import PublishButton from "../ui/PublishButton";
 import RichTextEditor from "../ui/RichTextEditor";
 import TablePagination, { useClientPagination } from "../ui/TablePagination";
 import { TableSkeleton } from "../ui/skeletons";
@@ -33,14 +34,17 @@ const slugify = (s: string) =>
 
 export default function Content() {
   const { user } = useAuth();
-  const canWrite = user?.role === "ADMIN" || user?.role === "EDITOR";
+  const canWrite = user?.role === "ADMIN" || user?.role === "EDITOR" || user?.role === "CONTENT_WRITER";
   return (
     <>
-      <div className="mb-3">
-        <h1 className="fs-3 mb-0">Content</h1>
-        <span className="text-muted small">
-          Blog articles, FAQ questions, and glossary terms shown on the website{canWrite ? " — publish after editing to go live." : " (read-only access)."}
-        </span>
+      <div className="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+        <div>
+          <h1 className="fs-3 mb-0">Content</h1>
+          <span className="text-muted small">
+            Blog articles, FAQ questions, and glossary terms shown on the website{canWrite ? " — publish after editing to go live." : " (read-only access)."}
+          </span>
+        </div>
+        {canWrite && <PublishButton />}
       </div>
       <Tabs defaultActiveKey="blog" className="mb-3">
         <Tab eventKey="blog" title="Blog">
