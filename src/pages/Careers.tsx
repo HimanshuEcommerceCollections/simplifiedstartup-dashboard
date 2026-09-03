@@ -290,7 +290,7 @@ function RoleModal({
   }
 
   return (
-    <Modal show onHide={busy ? undefined : onCancel} centered size="lg">
+    <Modal show onHide={busy ? undefined : onCancel} centered size="lg" scrollable>
       <Form onSubmit={onSubmit}>
         <Modal.Header closeButton={!busy}>
           <Modal.Title className="fs-5">{isNew ? "New job posting" : "Edit job posting"}</Modal.Title>

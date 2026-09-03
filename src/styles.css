@@ -72,6 +72,17 @@ td .badge {
   cursor: pointer;
 }
 
+/* Bootstrap's scrollable modal expects header/body/footer as direct children of
+   .modal-content; our modals wrap them in a <form>, so restore the flex chain —
+   without this the body can't shrink and the footer overflows the viewport. */
+.modal-content > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
 /* ---- rich text editor (TipTap) ---- */
 .rte {
   border: 1px solid #dee2e6;
