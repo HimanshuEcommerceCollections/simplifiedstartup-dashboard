@@ -4,8 +4,8 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
+import TablePagination, { useClientPagination } from "../ui/TablePagination";
 import Tab from "react-bootstrap/Tab";
 import Table from "react-bootstrap/Table";
 import Tabs from "react-bootstrap/Tabs";
@@ -126,6 +126,7 @@ function PostingsTab() {
     queryKey: ["career-roles"],
     queryFn: () => api.get<{ items: CareerRoleDto[] }>("/admin/career-roles"),
   });
+  const paging = useClientPagination(data?.items ?? []);
 
   const refetch = () => queryClient.invalidateQueries({ queryKey: ["career-roles"] });
 
@@ -167,9 +168,10 @@ function PostingsTab() {
         </Button>
       </div>
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle">
+        <Table striped hover responsive className="mb-0 align-middle">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>Role</th>
               <th>Type</th>
               <th>Location</th>
@@ -179,18 +181,19 @@ function PostingsTab() {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={5} cols={6} />
+            <TableSkeleton rows={5} cols={7} />
           ) : (
             <tbody>
-              {data?.items.length === 0 && (
+              {paging.total === 0 && (
                 <tr>
-                  <td colSpan={6} className="text-center text-muted py-4">
+                  <td colSpan={7} className="text-center text-muted py-4">
                     No postings yet — create the first one.
                   </td>
                 </tr>
               )}
-              {data?.items.map((role) => (
+              {paging.pageItems.map((role, i) => (
                 <tr key={role.id}>
+                  <td className="text-muted">{paging.startIndex + i + 1}</td>
                   <td>
                     <div className="fw-semibold">{role.title}</div>
                     <div className="text-muted small text-truncate" style={{ maxWidth: 320 }}>
@@ -242,6 +245,8 @@ function PostingsTab() {
           )}
         </Table>
       </div>
+
+      <TablePagination page={paging.page} pageSize={paging.pageSize} total={paging.total} onPage={paging.setPage} onPageSize={paging.setPageSize} />
 
       {editing && (
         <RoleModal
@@ -368,15 +373,16 @@ function ApplicationsTab() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [status, setStatus] = useState<"" | ApplicationStatus>("");
   const [selected, setSelected] = useState<JobApplicationDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<JobApplicationDto | null>(null);
 
-  const params = new URLSearchParams({ page: String(page), pageSize: "15" });
+  const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (status) params.set("status", status);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["applications", page, status],
+    queryKey: ["applications", page, pageSize, status],
     queryFn: () => api.get<Paged<JobApplicationDto>>(`/admin/applications?${params}`),
     placeholderData: keepPreviousData,
   });
@@ -391,8 +397,6 @@ function ApplicationsTab() {
     },
     onError: () => toast("Couldn't delete the application.", "danger"),
   });
-
-  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
 
   return (
     <>
@@ -416,9 +420,10 @@ function ApplicationsTab() {
         </Form.Select>
       </div>
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle table-hover">
+        <Table striped hover responsive className="mb-0 align-middle table-hover">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>Applicant</th>
               <th>Role</th>
               <th>CV</th>
@@ -427,18 +432,19 @@ function ApplicationsTab() {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={6} cols={5} />
+            <TableSkeleton rows={6} cols={6} />
           ) : (
             <tbody>
               {data?.items.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center text-muted py-4">
+                  <td colSpan={6} className="text-center text-muted py-4">
                     No applications{status ? " with this status" : " yet"}.
                   </td>
                 </tr>
               )}
-              {data?.items.map((a) => (
+              {data?.items.map((a, i) => (
                 <tr key={a.id} onClick={() => setSelected(a)}>
+                  <td className="text-muted">{(page - 1) * pageSize + i + 1}</td>
                   <td>
                     <div className="fw-semibold">{a.name}</div>
                     <div className="text-muted small">{a.email}</div>
@@ -456,13 +462,7 @@ function ApplicationsTab() {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination size="sm" className="mt-3">
-          <Pagination.Prev disabled={page <= 1} onClick={() => setPage((p) => p - 1)} />
-          <Pagination.Item active>{page}</Pagination.Item>
-          <Pagination.Next disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} />
-        </Pagination>
-      )}
+      <TablePagination page={page} pageSize={pageSize} total={data?.total ?? 0} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} />
 
       {selected && (
         <ApplicationModal application={selected} onClose={() => setSelected(null)} onDelete={() => setConfirmDelete(selected)} />

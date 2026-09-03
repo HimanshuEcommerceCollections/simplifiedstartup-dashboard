@@ -20,6 +20,7 @@ import {
 import { useAuth } from "../auth/AuthContext";
 import ConfirmModal from "../ui/ConfirmModal";
 import RichTextEditor from "../ui/RichTextEditor";
+import TablePagination, { useClientPagination } from "../ui/TablePagination";
 import { TableSkeleton } from "../ui/skeletons";
 import { useToast } from "../ui/Toasts";
 
@@ -237,6 +238,7 @@ function BlogTab({ canWrite }: { canWrite: boolean }) {
   const queryClient = useQueryClient();
   const { data: cats } = useCategories("blog");
   const { data, isLoading } = useQuery({ queryKey: ["articles"], queryFn: () => api.get<{ items: ArticleDto[] }>("/admin/articles") });
+  const paging = useClientPagination(data?.items ?? []);
   const [showCats, setShowCats] = useState(false);
   const [editing, setEditing] = useState<ArticleDto | "new" | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<ArticleDto | null>(null);
@@ -267,9 +269,10 @@ function BlogTab({ canWrite }: { canWrite: boolean }) {
         </div>
       )}
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle">
+        <Table striped hover responsive className="mb-0 align-middle">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>Article</th>
               <th>Category</th>
               <th>Status</th>
@@ -278,11 +281,12 @@ function BlogTab({ canWrite }: { canWrite: boolean }) {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={4} cols={5} />
+            <TableSkeleton rows={4} cols={6} />
           ) : (
             <tbody>
-              {data?.items.map((a) => (
+              {paging.pageItems.map((a, i) => (
                 <tr key={a.id} style={{ cursor: "pointer" }} onClick={() => setEditing(a)}>
+                  <td className="text-muted">{paging.startIndex + i + 1}</td>
                   <td>
                     <div className="fw-semibold">
                       {a.title} {a.featured && <Badge bg="warning" text="dark">featured</Badge>}
@@ -302,6 +306,8 @@ function BlogTab({ canWrite }: { canWrite: boolean }) {
           )}
         </Table>
       </div>
+
+      <TablePagination page={paging.page} pageSize={paging.pageSize} total={paging.total} onPage={paging.setPage} onPageSize={paging.setPageSize} />
 
       {editing && (
         <ArticleModal
@@ -611,6 +617,7 @@ function FaqTab({ canWrite }: { canWrite: boolean }) {
 
   const refetch = () => queryClient.invalidateQueries({ queryKey: ["faqs"] });
   const items = useMemo(() => (data?.items ?? []).filter((f) => !filter || f.categoryId === filter), [data, filter]);
+  const paging = useClientPagination(items);
 
   const remove = useMutation({
     mutationFn: (id: string) => api.del(`/admin/faqs/${id}`),
@@ -646,9 +653,10 @@ function FaqTab({ canWrite }: { canWrite: boolean }) {
         )}
       </div>
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle">
+        <Table striped hover responsive className="mb-0 align-middle">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>Question</th>
               <th>Category</th>
               <th>Status</th>
@@ -656,11 +664,12 @@ function FaqTab({ canWrite }: { canWrite: boolean }) {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={8} cols={4} />
+            <TableSkeleton rows={8} cols={5} />
           ) : (
             <tbody>
-              {items.map((f) => (
+              {paging.pageItems.map((f, i) => (
                 <tr key={f.id} style={{ cursor: "pointer" }} onClick={() => setEditing(f)}>
+                  <td className="text-muted">{paging.startIndex + i + 1}</td>
                   <td>
                     <div className="fw-semibold">{f.question}</div>
                     <div className="text-muted small text-truncate" style={{ maxWidth: 480 }}>
@@ -678,6 +687,8 @@ function FaqTab({ canWrite }: { canWrite: boolean }) {
           )}
         </Table>
       </div>
+
+      <TablePagination page={paging.page} pageSize={paging.pageSize} total={paging.total} onPage={paging.setPage} onPageSize={paging.setPageSize} />
 
       {editing && (
         <FaqModal
@@ -821,6 +832,7 @@ function GlossaryTab({ canWrite }: { canWrite: boolean }) {
     const q = search.trim().toLowerCase();
     return (data?.items ?? []).filter((t) => !q || `${t.term} ${t.definition}`.toLowerCase().includes(q));
   }, [data, search]);
+  const paging = useClientPagination(items);
 
   const remove = useMutation({
     mutationFn: (id: string) => api.del(`/admin/glossary/${id}`),
@@ -844,20 +856,22 @@ function GlossaryTab({ canWrite }: { canWrite: boolean }) {
         )}
       </div>
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle">
+        <Table striped hover responsive className="mb-0 align-middle">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th style={{ width: 260 }}>Term</th>
               <th>Definition</th>
               <th style={{ width: 110 }}>Status</th>
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={8} cols={3} />
+            <TableSkeleton rows={8} cols={4} />
           ) : (
             <tbody>
-              {items.map((t) => (
+              {paging.pageItems.map((t, i) => (
                 <tr key={t.id} style={{ cursor: "pointer" }} onClick={() => setEditing(t)}>
+                  <td className="text-muted">{paging.startIndex + i + 1}</td>
                   <td className="fw-semibold">{t.term}</td>
                   <td className="text-muted text-truncate" style={{ maxWidth: 520 }}>
                     {t.definition}
@@ -871,6 +885,8 @@ function GlossaryTab({ canWrite }: { canWrite: boolean }) {
           )}
         </Table>
       </div>
+
+      <TablePagination page={paging.page} pageSize={paging.pageSize} total={paging.total} onPage={paging.setPage} onPageSize={paging.setPageSize} />
 
       {editing && (
         <TermModal

@@ -11,6 +11,7 @@ import { api, ApiError } from "../api/client";
 import { ROLES, type Role, type UserDto } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import ConfirmModal from "../ui/ConfirmModal";
+import TablePagination, { useClientPagination } from "../ui/TablePagination";
 import { TableSkeleton } from "../ui/skeletons";
 import { useToast } from "../ui/Toasts";
 
@@ -41,6 +42,7 @@ export default function Team() {
     queryKey: ["users"],
     queryFn: () => api.get<{ items: UserDto[] }>("/admin/users"),
   });
+  const paging = useClientPagination(data?.items ?? []);
 
   const refetch = () => {
     queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -96,9 +98,10 @@ export default function Team() {
       </div>
 
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle">
+        <Table striped hover responsive className="mb-0 align-middle">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>User</th>
               <th>Role</th>
               <th>Status</th>
@@ -108,13 +111,14 @@ export default function Team() {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={4} cols={6} />
+            <TableSkeleton rows={4} cols={7} />
           ) : (
             <tbody>
-              {data?.items.map((u) => {
+              {paging.pageItems.map((u, i) => {
                 const isMe = u.id === me?.id;
                 return (
                   <tr key={u.id}>
+                    <td className="text-muted">{paging.startIndex + i + 1}</td>
                     <td>
                       <div className="fw-semibold">
                         {u.name ?? <span className="text-muted fst-italic">no name yet</span>} {isMe && <Badge bg="light" text="dark">you</Badge>}
@@ -181,6 +185,8 @@ export default function Team() {
           )}
         </Table>
       </div>
+
+      <TablePagination page={paging.page} pageSize={paging.pageSize} total={paging.total} onPage={paging.setPage} onPageSize={paging.setPageSize} />
 
       <InviteModal show={showInvite} onClose={() => setShowInvite(false)} onInvited={refetch} />
 

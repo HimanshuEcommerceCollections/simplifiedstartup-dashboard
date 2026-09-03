@@ -4,9 +4,9 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
+import TablePagination from "../ui/TablePagination";
 import { api } from "../api/client";
 import { LEAD_STATUSES, type LeadDto, type LeadStatus, type Paged } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
@@ -31,17 +31,18 @@ export default function Leads() {
   const queryClient = useQueryClient();
 
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<"" | LeadStatus>("");
   const [selected, setSelected] = useState<LeadDto | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<LeadDto | null>(null);
 
-  const query = new URLSearchParams({ page: String(page), pageSize: "15" });
+  const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) query.set("q", q);
   if (status) query.set("status", status);
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["leads", page, q, status],
+    queryKey: ["leads", page, pageSize, q, status],
     queryFn: () => api.get<Paged<LeadDto>>(`/admin/leads?${query}`),
     placeholderData: keepPreviousData,
   });
@@ -57,8 +58,6 @@ export default function Leads() {
     },
     onError: () => toast("Couldn't delete the lead.", "danger"),
   });
-
-  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
 
   return (
     <>
@@ -99,9 +98,10 @@ export default function Leads() {
       </div>
 
       <div className="card shadow-sm">
-        <Table hover responsive className="mb-0 align-middle table-hover">
+        <Table striped hover responsive className="mb-0 align-middle table-hover">
           <thead>
             <tr>
+              <th style={{ width: 64 }}>S.No.</th>
               <th>Name</th>
               <th>Email</th>
               <th>Needs</th>
@@ -110,18 +110,19 @@ export default function Leads() {
             </tr>
           </thead>
           {isLoading ? (
-            <TableSkeleton rows={8} cols={5} />
+            <TableSkeleton rows={8} cols={6} />
           ) : (
             <tbody>
               {data?.items.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center text-muted py-4">
+                  <td colSpan={6} className="text-center text-muted py-4">
                     No leads match.
                   </td>
                 </tr>
               )}
-              {data?.items.map((lead) => (
+              {data?.items.map((lead, i) => (
                 <tr key={lead.id} onClick={() => setSelected(lead)}>
+                  <td className="text-muted">{(page - 1) * pageSize + i + 1}</td>
                   <td className="fw-semibold">{lead.name}</td>
                   <td>{lead.email}</td>
                   <td className="text-truncate" style={{ maxWidth: 220 }}>
@@ -138,13 +139,7 @@ export default function Leads() {
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination size="sm" className="mt-3">
-          <Pagination.Prev disabled={page <= 1} onClick={() => setPage((p) => p - 1)} />
-          <Pagination.Item active>{page}</Pagination.Item>
-          <Pagination.Next disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} />
-        </Pagination>
-      )}
+      <TablePagination page={page} pageSize={pageSize} total={data?.total ?? 0} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} />
 
       {selected && (
         <LeadModal
