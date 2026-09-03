@@ -72,7 +72,9 @@ export default function Shell() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="d-flex flex-column flex-lg-row min-vh-100 bg-light">
+    // viewport-locked shell: only <main> scrolls, so the sidebar (and its
+    // sign-out footer) stay on screen however long a table page gets
+    <div className="d-flex flex-column flex-lg-row vh-100 overflow-hidden bg-light">
       {/* mobile top bar */}
       <header className="shell-topbar d-lg-none d-flex align-items-center justify-content-between text-white px-3 py-2">
         <Brand />
@@ -101,7 +103,7 @@ export default function Shell() {
         </Offcanvas.Body>
       </Offcanvas>
 
-      <main className="flex-grow-1 p-3 p-lg-4 overflow-auto">
+      <main className="shell-main flex-grow-1 p-3 p-lg-4 overflow-auto">
         <Outlet />
       </main>
     </div>

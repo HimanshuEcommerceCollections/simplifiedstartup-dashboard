@@ -1,13 +1,17 @@
 .shell-sidebar {
   width: 232px;
-  min-height: 100vh;
   background: #0f172a;
   flex-shrink: 0;
+  overflow-y: auto; /* very short viewports: the sidebar scrolls itself */
+}
+/* the flex children must be allowed to shrink for main's own scrollbar to engage */
+.shell-main {
+  min-width: 0;
+  min-height: 0;
 }
 .shell-topbar {
   background: #0f172a;
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   z-index: 1030;
 }
 .shell-offcanvas {
