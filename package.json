@@ -12,6 +12,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.0",
+    "@tiptap/extension-image": "^3.31.2",
+    "@tiptap/extension-link": "^3.31.2",
+    "@tiptap/extension-placeholder": "^3.31.2",
+    "@tiptap/react": "^3.31.2",
+    "@tiptap/starter-kit": "^3.31.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "react": "^19.0.0",

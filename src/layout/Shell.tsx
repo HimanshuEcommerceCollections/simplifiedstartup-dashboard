@@ -10,6 +10,7 @@ const NAV_ITEMS: { to: string; label: string; icon: string; roles: Role[] }[] = 
   { to: "/", label: "Overview", icon: "bi-speedometer2", roles: ["ADMIN", "EDITOR", "RECRUITER", "VIEWER"] },
   { to: "/leads", label: "Leads", icon: "bi-person-lines-fill", roles: ["ADMIN", "EDITOR", "VIEWER"] },
   { to: "/subscribers", label: "Subscribers", icon: "bi-envelope-paper", roles: ["ADMIN", "EDITOR", "VIEWER"] },
+  { to: "/content", label: "Content", icon: "bi-journal-text", roles: ["ADMIN", "EDITOR", "VIEWER"] },
   { to: "/careers", label: "Careers", icon: "bi-briefcase", roles: ["ADMIN", "RECRUITER"] },
   { to: "/team", label: "Team", icon: "bi-people", roles: ["ADMIN"] },
 ];

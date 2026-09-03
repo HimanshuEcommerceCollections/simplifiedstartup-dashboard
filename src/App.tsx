@@ -3,6 +3,7 @@ import { RequireAuth, RequireRole } from "./auth/AuthContext";
 import Shell from "./layout/Shell";
 import AcceptInvite from "./pages/AcceptInvite";
 import Careers from "./pages/Careers";
+import Content from "./pages/Content";
 import ForgotPassword from "./pages/ForgotPassword";
 import Leads from "./pages/Leads";
 import Login from "./pages/Login";
@@ -40,6 +41,14 @@ export default function App() {
           element={
             <RequireRole roles={["ADMIN", "EDITOR", "VIEWER"]}>
               <Subscribers />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/content"
+          element={
+            <RequireRole roles={["ADMIN", "EDITOR", "VIEWER"]}>
+              <Content />
             </RequireRole>
           }
         />

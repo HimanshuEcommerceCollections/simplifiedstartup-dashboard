@@ -33,3 +33,13 @@ export const api = {
   patch: <T>(path: string, body: unknown) => request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
   del: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
+
+/** Multipart upload (images, CVs) — browser sets the content-type boundary itself. */
+export async function apiUpload<T>(path: string, form: FormData): Promise<T> {
+  const res = await fetch(`${API_URL}/api/v1${path}`, { method: "POST", credentials: "include", body: form });
+  const data = (await res.json().catch(() => null)) as ({ ok?: boolean; error?: string } & T) | null;
+  if (!res.ok || !data || data.ok === false) {
+    throw new ApiError(res.status, data?.error ?? `upload failed (${res.status})`);
+  }
+  return data;
+}

@@ -19,6 +19,7 @@ import {
   type PublishStatusDto,
 } from "../api/types";
 import ConfirmModal from "../ui/ConfirmModal";
+import RichTextEditor from "../ui/RichTextEditor";
 import { TableSkeleton } from "../ui/skeletons";
 import { useToast } from "../ui/Toasts";
 
@@ -112,8 +113,8 @@ function PublishButton() {
 
 /* ---------------- postings ---------------- */
 
-type RoleDraft = { title: string; type: string; location: string; description: string; published: boolean; sortOrder: number };
-const EMPTY_DRAFT: RoleDraft = { title: "", type: "Full-time", location: "Remote", description: "", published: true, sortOrder: 0 };
+type RoleDraft = { title: string; type: string; location: string; description: string; body: string; published: boolean; sortOrder: number };
+const EMPTY_DRAFT: RoleDraft = { title: "", type: "Full-time", location: "Remote", description: "", body: "", published: true, sortOrder: 0 };
 
 function PostingsTab() {
   const toast = useToast();
@@ -221,6 +222,7 @@ function PostingsTab() {
                               type: role.type,
                               location: role.location ?? "",
                               description: role.description,
+                              body: role.body ?? "",
                               published: role.published,
                               sortOrder: role.sortOrder,
                             },
@@ -308,14 +310,22 @@ function RoleModal({
               <Form.Control value={draft.location} onChange={(e) => set("location", e.target.value)} placeholder="Remote" />
             </div>
             <div className="col-12">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Short blurb (careers-page row — plain text)</Form.Label>
               <Form.Control
                 as="textarea"
-                rows={3}
+                rows={2}
                 value={draft.description}
                 onChange={(e) => set("description", e.target.value)}
                 required
                 placeholder="One or two sentences shown on the careers page."
+              />
+            </div>
+            <div className="col-12">
+              <Form.Label>Full description (shown in the apply dialog — optional)</Form.Label>
+              <RichTextEditor
+                value={draft.body}
+                onChange={(html) => set("body", html)}
+                placeholder="Responsibilities, requirements, what a great first year looks like…"
               />
             </div>
             <div className="col-md-6 d-flex align-items-center">

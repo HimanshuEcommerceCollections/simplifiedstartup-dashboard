@@ -71,3 +71,64 @@ td .badge {
 .table-hover tbody tr {
   cursor: pointer;
 }
+
+/* ---- rich text editor (TipTap) ---- */
+.rte {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background: #fff;
+}
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border-bottom: 1px solid #dee2e6;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+.rte .ProseMirror {
+  min-height: 220px;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding: 14px 16px;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.rte .ProseMirror h2 { font-size: 1.35rem; margin: 1rem 0 0.5rem; }
+.rte .ProseMirror h3 { font-size: 1.15rem; margin: 0.9rem 0 0.4rem; }
+.rte .ProseMirror h4 { font-size: 1rem; margin: 0.8rem 0 0.3rem; }
+.rte .ProseMirror p { margin: 0 0 0.6rem; }
+.rte .ProseMirror ul,
+.rte .ProseMirror ol { padding-left: 1.4rem; margin-bottom: 0.6rem; }
+.rte .ProseMirror blockquote {
+  border-left: 3px solid #adb5bd;
+  margin: 0.6rem 0;
+  padding: 0.2rem 0 0.2rem 0.9rem;
+  color: #495057;
+}
+.rte .ProseMirror img {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+  margin: 0.6rem 0;
+}
+.rte .ProseMirror img.ProseMirror-selectednode { outline: 2px solid #2563eb; }
+.rte .ProseMirror a { color: #2563eb; }
+.rte .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* article image manager */
+.img-thumb {
+  width: 84px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}

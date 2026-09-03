@@ -57,12 +57,68 @@ export type CareerRoleDto = {
   type: string;
   location: string | null;
   description: string;
+  body: string | null;
   published: boolean;
   sortOrder: number;
   applicationCount?: number;
   createdAt: string;
   updatedAt: string;
 };
+
+// ---------- content collections ----------
+
+export const CATEGORY_COLLECTIONS = ["blog", "faq"] as const;
+export type CategoryCollection = (typeof CATEGORY_COLLECTIONS)[number];
+
+export type ContentCategoryDto = {
+  id: string;
+  collection: CategoryCollection;
+  key: string;
+  label: string;
+  sortOrder: number;
+  itemCount: number;
+};
+
+export type ArticleImageDto = { id: string; url: string; alt: string; isCover: boolean; sortOrder: number };
+
+export type ArticleDto = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  readTime: string;
+  artwork: string;
+  body: string | null;
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
+  categoryId: string;
+  categoryKey: string;
+  categoryLabel: string;
+  images: ArticleImageDto[];
+  updatedAt: string;
+};
+
+export type FaqDto = {
+  id: string;
+  question: string;
+  answer: string;
+  categoryId: string;
+  categoryKey: string;
+  categoryLabel: string;
+  published: boolean;
+  sortOrder: number;
+};
+
+export type GlossaryTermDto = { id: string; term: string; definition: string; published: boolean; sortOrder: number };
+
+/** Card-art presets — the actual SVGs live in the website's registry. */
+export const ARTWORK_PRESETS = [
+  { key: "agency-checklist", label: "Checklist & badge" },
+  { key: "cost-bars", label: "Cost bars ($)" },
+  { key: "seo-scope", label: "SEO magnifier" },
+  { key: "social-chat", label: "Chat bubbles" },
+] as const;
 
 export type JobApplicationDto = {
   id: string;
