@@ -67,7 +67,7 @@ export default function Leads() {
           <h1 className="fs-3 mb-0">Leads</h1>
           <span className="text-muted small">Growth-plan requests from the website{isFetching && <Spinner size="sm" className="ms-2" />}</span>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap gap-2">
           <Form.Select
             size="sm"
             style={{ width: 160 }}

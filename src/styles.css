@@ -4,6 +4,32 @@
   background: #0f172a;
   flex-shrink: 0;
 }
+.shell-topbar {
+  background: #0f172a;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+.shell-offcanvas {
+  background: #0f172a;
+  max-width: 280px;
+}
+.shell-offcanvas .nav-link {
+  color: #cbd5e1;
+  border-radius: 8px;
+  font-size: 14.5px;
+}
+.shell-offcanvas .nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.shell-offcanvas .nav-link.active {
+  background: linear-gradient(135deg, #2563eb, #14b8a6);
+  color: #fff;
+}
+.shell-offcanvas .offcanvas-body {
+  display: flex;
+}
 .shell-sidebar .nav-link {
   color: #cbd5e1;
   border-radius: 8px;
@@ -29,6 +55,7 @@
   display: grid;
   place-items: center;
   background: #f1f5f9;
+  padding: 16px;
 }
 .auth-card {
   width: 100%;

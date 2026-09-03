@@ -55,7 +55,7 @@ export default function Subscribers() {
             Newsletter signups from the site footer{isFetching && <Spinner size="sm" className="ms-2" />}
           </span>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap gap-2">
           <Form.Control
             size="sm"
             style={{ width: 220 }}
