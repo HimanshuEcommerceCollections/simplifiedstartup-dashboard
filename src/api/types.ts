@@ -128,7 +128,7 @@ export type JobApplicationDto = {
   email: string;
   phone: string | null;
   portfolioUrl: string | null;
-  hasCv: boolean;
+  cvUrl: string | null;
   message: string | null;
   status: ApplicationStatus;
   createdAt: string;

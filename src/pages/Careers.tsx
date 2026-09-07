@@ -394,7 +394,7 @@ function ApplicationsTab() {
                     <div className="text-muted small">{a.email}</div>
                   </td>
                   <td>{a.roleTitle ?? <span className="text-muted">General</span>}</td>
-                  <td>{a.hasCv ? <i className="bi bi-file-earmark-check text-success" aria-label="CV attached"></i> : <span className="text-muted">—</span>}</td>
+                  <td>{a.cvUrl ? <i className="bi bi-link-45deg text-success" aria-label="CV link shared"></i> : <span className="text-muted">—</span>}</td>
                   <td>
                     <Badge bg={APP_STATUS_COLORS[a.status]}>{a.status}</Badge>
                   </td>
@@ -487,9 +487,9 @@ function ApplicationModal({
               ))}
             </Form.Select>
           </div>
-          {application.hasCv && (
-            <Button variant="outline-primary" href={`${API_URL}/api/v1/admin/applications/${application.id}/cv`}>
-              <i className="bi bi-download me-1" aria-hidden="true"></i>Download CV
+          {application.cvUrl && (
+            <Button variant="outline-primary" href={application.cvUrl} target="_blank" rel="noopener noreferrer">
+              <i className="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>Open CV link
             </Button>
           )}
         </div>
