@@ -18,7 +18,7 @@ const NAV_ITEMS: { to: string; label: string; icon: string; roles: Role[] }[] = 
 function Brand() {
   return (
     <div className="d-flex align-items-center gap-2">
-      <span className="brand-dot" aria-hidden="true"></span>
+      <img className="brand-mark" src="/logo.png" alt="" aria-hidden="true" />
       <span className="fw-bold">Simplified Startup</span>
     </div>
   );

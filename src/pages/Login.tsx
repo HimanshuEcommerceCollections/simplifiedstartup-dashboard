@@ -36,7 +36,7 @@ export default function Login() {
       <Card className="auth-card shadow-sm">
         <Card.Body className="p-4">
           <div className="d-flex align-items-center gap-2 mb-3">
-            <span className="brand-dot" aria-hidden="true"></span>
+            <img className="brand-mark" src="/logo.png" alt="" aria-hidden="true" />
             <span className="fw-bold">Simplified Startup — Dashboard</span>
           </div>
           <Form onSubmit={onSubmit}>
